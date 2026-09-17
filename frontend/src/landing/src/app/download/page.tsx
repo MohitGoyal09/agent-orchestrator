@@ -5,7 +5,7 @@ import {
   DOWNLOAD_URL_MAC_X64,
   DOWNLOAD_URL_WINDOWS,
 } from "@ao/shared/constants";
-import { Cloud, Download } from "lucide-react";
+import { Cloud, Download, Plus } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -96,25 +96,37 @@ function Code({ children }: { children: string }) {
 // prompt and Gatekeeper still evaluates the signature. The cause is still under
 // investigation, so this copy stays symptom-only and asks people to report the
 // diagnostics we need rather than asserting a mechanism we have not confirmed.
+// Collapsed by default behind a native disclosure so visitors who never hit
+// the block see one line, not two cards: no client JS, static-export safe.
 function MacUnblockNotice() {
   return (
     <section className="mt-16">
-      <div className="mb-6 max-w-2xl">
-        <h2 className="text-2xl font-semibold text-foreground">
-          If macOS blocks the app on first launch
-        </h2>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          macOS may say Agent Orchestrator{" "}
-          <span className="text-foreground">
-            cannot be opened because the developer cannot be verified
+      <details className="group rounded-2xl border border-border p-5 sm:p-6">
+        <summary className="flex cursor-pointer list-none items-center justify-between gap-4 [&::-webkit-details-marker]:hidden">
+          <span>
+            <span className="block text-base font-semibold text-foreground">
+              If macOS blocks the app on first launch
+            </span>
+            <span className="mt-1 block text-sm leading-6 text-muted-foreground">
+              A one-time Finder step gets you through it — expand for the steps
+              and what to send us if it persists.
+            </span>
           </span>
-          . Every macOS build is signed with our Apple Developer ID and notarized
-          by Apple, so this is not a sign the download is unsafe. Opening it from
-          Finder the first time gets you through it.
-        </p>
-      </div>
+          <Plus className="h-5 w-5 shrink-0 text-muted-foreground transition-transform duration-200 group-open:rotate-45" />
+        </summary>
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+        <div className="mt-6">
+          <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
+            macOS may say Agent Orchestrator{" "}
+            <span className="text-foreground">
+              cannot be opened because the developer cannot be verified
+            </span>
+            . Every macOS build is signed with our Apple Developer ID and
+            notarized by Apple, so this is not a sign the download is unsafe.
+            Opening it from Finder the first time gets you through it.
+          </p>
+
+          <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
         <article className="flex flex-col rounded-2xl bg-card p-5 sm:p-6">
           <h3 className="text-base font-semibold text-foreground">
             Open it from Finder
@@ -164,7 +176,9 @@ function MacUnblockNotice() {
             with it attached.
           </p>
         </article>
-      </div>
+          </div>
+        </div>
+      </details>
     </section>
   );
 }
