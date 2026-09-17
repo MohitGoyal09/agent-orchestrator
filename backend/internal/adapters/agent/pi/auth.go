@@ -100,6 +100,8 @@ func piAuthEntryIsOAuth(entry piAuthEntry) bool {
 	}
 	// OAuth tokens live in auth.json after `/login` and auto-refresh when
 	// expired, so a stored access token counts as a login even past expiry.
+	// `/logout` deletes the provider entry from auth.json rather than leaving
+	// a stale token behind, so a lingering access string is not a logout case.
 	return strings.TrimSpace(entry.Access) != ""
 }
 
